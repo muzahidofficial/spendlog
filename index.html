@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b1020" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="SpendLog" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
+  <title>SpendLog — Money Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#070b14;--panel:#0e1526;--panel2:#111a30;--line:#24304c;--text:#f7f9ff;--muted:#9aa7bd;
+      --accent:#7c5cff;--accent2:#34d399;--danger:#ff637d;--warning:#f5c451;--shadow:0 22px 70px rgba(0,0,0,.35)
+    }
+    *{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,sans-serif;background:radial-gradient(circle at top right,#17214a 0,transparent 28%),radial-gradient(circle at bottom left,#142d2d 0,transparent 24%),var(--bg);color:var(--text);min-height:100vh}
+    button,input,select,textarea{font:inherit} button{cursor:pointer}
+    .app{max-width:1180px;margin:auto;padding:28px 18px 48px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px}
+    .brand{display:flex;align-items:center;gap:12px}.logo{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;overflow:hidden;flex:0 0 44px;box-shadow:0 10px 30px rgba(124,92,255,.28),inset 0 1px 0 rgba(255,255,255,.16)}.logo svg{display:block;width:100%;height:100%}
+    h1{font-size:24px;margin:0}.sub{color:var(--muted);font-size:13px;margin-top:4px}
+    .install-btn{border:1px solid var(--line);background:#0b1222;color:#eef2ff;border-radius:999px;padding:10px 14px;font-weight:700;font-size:12px}.install-btn.hidden{display:none!important}.date-pill{padding:10px 14px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:rgba(255,255,255,.03);font-size:13px}
+    .grid{display:grid;grid-template-columns:380px 1fr;gap:18px}
+    .card{background:linear-gradient(180deg,rgba(18,27,49,.96),rgba(12,19,34,.96));border:1px solid rgba(255,255,255,.07);border-radius:22px;box-shadow:var(--shadow)}
+    .form-card{padding:22px;position:sticky;top:18px;height:max-content}.card h2{font-size:17px;margin:0 0 18px}
+    .field{margin-bottom:14px}.field label{display:block;font-size:12px;color:#c4ccda;margin-bottom:7px;font-weight:700;letter-spacing:.02em}
+    input,select,textarea{width:100%;background:#0b1222;color:var(--text);border:1px solid #293653;border-radius:12px;padding:12px 13px;outline:none;transition:.2s}
+    input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,92,255,.14)}
+    textarea{resize:vertical;min-height:78px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .primary{width:100%;border:0;border-radius:13px;padding:13px 16px;background:linear-gradient(135deg,var(--accent),#5e8cff);color:white;font-weight:800;margin-top:4px}
+    .secondary{border:1px solid var(--line);background:#0b1222;color:#dce4f3;border-radius:11px;padding:10px 12px}
+    .content{display:flex;flex-direction:column;gap:18px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.stat{padding:17px}.stat-label{font-size:12px;color:var(--muted)}.stat-value{font-size:24px;font-weight:800;margin-top:8px}.stat-note{font-size:11px;color:#77839a;margin-top:5px}
+    .history{padding:20px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.toolbar input,.toolbar select{width:auto;min-width:150px;flex:1}.toolbar .secondary{flex:0 0 auto}
+    .table-wrap{overflow:auto;border:1px solid rgba(255,255,255,.06);border-radius:14px}table{width:100%;border-collapse:collapse;min-width:800px}th,td{text-align:left;padding:13px 12px;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px}th{color:#99a7bd;font-size:11px;text-transform:uppercase;letter-spacing:.08em;background:#0c1425;position:sticky;top:0}td{color:#e6ebf5}.amount{font-weight:800}.badge{display:inline-flex;padding:5px 8px;border-radius:999px;background:#17233c;color:#b9c7dc;font-size:11px}.person{color:#bfaeff;font-weight:700}.actions{display:flex;gap:6px}.icon-btn{border:1px solid #2a3650;background:#10182b;color:#d5ddec;border-radius:9px;padding:7px 9px}.icon-btn.delete{color:#ff9aac}.empty{padding:46px 18px;text-align:center;color:var(--muted)}
+    .people-card{padding:20px}.people-list{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.person-total{padding:14px;border-radius:14px;background:#0b1222;border:1px solid rgba(255,255,255,.06)}.person-total b{display:block;margin-bottom:6px}.person-total span{color:var(--muted);font-size:12px}
+    .footer-note{color:#6f7c91;font-size:11px;text-align:center;margin-top:18px}.hidden{display:none!important}
+    .quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.request-btn{background:#13253a;border:1px solid #2b536f;color:#ccecff;border-radius:12px;padding:11px 12px;font-weight:800}.admin-link{display:grid;place-items:center;text-decoration:none;background:#0b1222;border:1px solid var(--line);color:#d9e2f2;border-radius:12px;padding:11px 12px;font-weight:700;font-size:12px}
+    .sync{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:10px;font-size:11px;color:#8090a7}.sync-dot{width:8px;height:8px;border-radius:50%;background:#f5c451}.sync.online .sync-dot{background:#34d399}.sync.error .sync-dot{background:#ff637d}
+    .request-list{display:grid;gap:9px}.request-item{padding:13px;border-radius:14px;background:#0b1222;border:1px solid rgba(255,255,255,.06);display:grid;grid-template-columns:1fr auto;gap:8px 14px}.request-item b{font-size:13px}.request-meta{color:#8694aa;font-size:11px;line-height:1.5}.request-status{align-self:start}.status-pending{background:#392e16;color:#f8d978}.status-approved{background:#152f3c;color:#8bdfff}.status-purchased,.status-restocked{background:#153326;color:#8ee7bd}.status-completed{background:#243044;color:#cbd5e1}.status-rejected{background:#3a1d27;color:#ff9aac}
+    .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:90;background:#111a30;border:1px solid #33415f;color:#eff4ff;padding:11px 14px;border-radius:12px;box-shadow:var(--shadow);font-size:12px;max-width:calc(100vw - 24px)}
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.62);display:grid;place-items:center;padding:16px;z-index:50}.modal-box{width:min(470px,100%);padding:22px}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.close{background:none;border:0;color:#c9d2e3;font-size:22px}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}.form-card{position:static}.stats{grid-template-columns:1fr 1fr}.people-list{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){
+      body{background:radial-gradient(circle at top right,#141d3b 0,transparent 34%),var(--bg)}
+      .app{padding:14px 10px 28px;width:100%;overflow-x:hidden}
+      .topbar{align-items:center;margin-bottom:16px;padding:2px 2px 0}
+      .brand{gap:10px;min-width:0}.logo{width:40px;height:40px;border-radius:12px;flex:0 0 40px}h1{font-size:21px}.sub{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}.install-btn{padding:9px 11px;font-size:11px}.date-pill{display:none}
+      .grid,.content{gap:12px}.card{box-shadow:0 14px 36px rgba(0,0,0,.28)}
+      .form-card,.history,.people-card{padding:16px;border-radius:16px}.form-card h2,.history h2,.people-card h2{font-size:16px;margin-bottom:14px}
+      .field{margin-bottom:12px}.field label{font-size:11px;margin-bottom:6px}input,select,textarea{font-size:16px;padding:12px;border-radius:11px}textarea{min-height:72px}.row{grid-template-columns:1fr;gap:0}.primary{min-height:46px;font-size:15px}
+      .stats{grid-template-columns:1fr 1fr;gap:9px}.stat{padding:13px;border-radius:15px;min-width:0}.stat-label{font-size:10px}.stat-value{font-size:19px;margin-top:6px;overflow-wrap:anywhere}.stat-note{font-size:10px;line-height:1.3}
+      .people-list{grid-template-columns:1fr;gap:8px}.person-total{padding:12px;border-radius:12px;display:flex;align-items:center;justify-content:space-between;gap:12px}.person-total b{margin:0;font-size:13px}.person-total span{text-align:right;font-size:11px}
+      .toolbar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}.toolbar input,.toolbar select,.toolbar button{width:100%;min-width:0;font-size:13px}.toolbar input:first-child{grid-column:1/-1}.toolbar .secondary{min-height:43px}
+      .table-wrap{overflow:visible;border:0;border-radius:0;background:transparent}table{display:block;min-width:0;width:100%}thead{display:none}tbody{display:grid;gap:10px}tr{display:grid;grid-template-columns:1fr auto;gap:8px 12px;padding:13px;background:#0b1222;border:1px solid rgba(255,255,255,.06);border-radius:14px}td{display:block;padding:0;border:0;font-size:12px;min-width:0}td:nth-child(1){grid-column:1/2;color:#8794aa;font-size:11px;order:1}td:nth-child(2){grid-column:1/-1;order:2;font-size:13px;line-height:1.4}td:nth-child(3){grid-column:1/2;order:3}td:nth-child(4){grid-column:1/2;order:4}td:nth-child(5){grid-column:2/3;grid-row:1/3;order:1;text-align:right;align-self:start;font-size:15px;white-space:nowrap}td:nth-child(6){grid-column:2/3;grid-row:3/5;order:4;align-self:end}.actions{justify-content:flex-end;flex-direction:column}.icon-btn{padding:7px 10px;font-size:11px;min-width:64px}.badge{font-size:10px;padding:4px 7px}.person{font-size:11px}.empty{padding:28px 14px}
+      .modal{padding:10px;align-items:end}.modal-box{max-height:92vh;overflow:auto;border-radius:18px 18px 0 0;padding:16px;padding-bottom:calc(18px + env(safe-area-inset-bottom))}.modal-head{position:sticky;top:-16px;background:linear-gradient(180deg,rgba(18,27,49,1),rgba(18,27,49,.96));z-index:2;padding:6px 0 10px;margin-bottom:8px}.close{font-size:26px;padding:4px 8px}
+      .footer-note{font-size:10px;line-height:1.45}
+    }
+    @media(max-width:380px){.stats{grid-template-columns:1fr}.toolbar{grid-template-columns:1fr}.toolbar input:first-child{grid-column:auto}.sub{max-width:180px}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand"><div class="logo" aria-label="SpendLog"><svg viewBox="0 0 48 48" role="img" aria-hidden="true"><defs><linearGradient id="sl-bg" x1="5" y1="4" x2="43" y2="45" gradientUnits="userSpaceOnUse"><stop stop-color="#8b6cff"/><stop offset="1" stop-color="#3ac6ff"/></linearGradient><linearGradient id="sl-shine" x1="13" y1="10" x2="35" y2="38" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"/><stop offset="1" stop-color="#e9f5ff" stop-opacity=".88"/></linearGradient></defs><rect x="1" y="1" width="46" height="46" rx="14" fill="#10182b"/><rect x="2" y="2" width="44" height="44" rx="13" fill="url(#sl-bg)"/><path d="M12 31.5c4.3-7.5 7.6-11.1 11-11.1 3.2 0 4.6 3.2 7.1 3.2 2.2 0 4.1-2.2 6.2-6.1" fill="none" stroke="url(#sl-shine)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M32.7 17.2h4.2v4.2" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="13" cy="32" r="2.1" fill="#fff" fill-opacity=".95"/></svg></div><div><h1>SpendLog</h1><div class="sub">Personal & shared money tracker</div></div></div>
+    <div style="display:flex;align-items:center;gap:8px"><button class="install-btn hidden" id="installBtn" type="button">Install App</button><div class="date-pill" id="todayLabel"></div></div>
+  </div>
+
+  <div class="grid">
+    <aside class="card form-card">
+      <h2>Add Expense</h2>
+      <form id="expenseForm">
+        <div class="field"><label>What did you buy / reason?</label><input id="reason" placeholder="e.g. Groceries, lunch, transport" required></div>
+        <div class="row">
+          <div class="field"><label>Amount (BDT)</label><input id="amount" type="number" min="0.01" step="0.01" placeholder="500" required></div>
+          <div class="field"><label>Spent By</label><input id="spentBy" list="peopleOptions" placeholder="e.g. Muzahid" required><datalist id="peopleOptions"></datalist></div>
+        </div>
+        <div class="field"><label>Category</label><select id="category"><option>Food</option><option>Transport</option><option>Shopping</option><option>Bills</option><option>Health</option><option>Education</option><option>Entertainment</option><option>Home</option><option>Work</option><option>Other</option></select></div>
+        <div class="row">
+          <div class="field"><label>Date</label><input id="date" type="date" required></div>
+          <div class="field"><label>Time</label><input id="time" type="time" required></div>
+        </div>
+        <div class="field"><label>Notes (optional)</label><textarea id="notes" placeholder="Extra details, shop name, payment method, etc."></textarea></div>
+        <button class="primary" type="submit">Save Expense</button>
+      </form>
+      <div class="quick-actions"><button class="request-btn" id="requestItemBtn" type="button">Request Finished Item</button><a class="admin-link" href="admin.html">Admin Panel</a></div>
+      <div class="sync" id="syncState"><span class="sync-dot"></span><span>Connecting to database…</span></div>
+      <div class="footer-note">Database-backed on Vercel, with a local cache for offline safety.</div>
+    </aside>
+
+    <main class="content">
+      <section class="stats">
+        <div class="card stat"><div class="stat-label">Total Spent</div><div class="stat-value" id="totalSpent">৳0</div><div class="stat-note">All recorded expenses</div></div>
+        <div class="card stat"><div class="stat-label">Today</div><div class="stat-value" id="todaySpent">৳0</div><div class="stat-note">Spent today</div></div>
+        <div class="card stat"><div class="stat-label">This Month</div><div class="stat-value" id="monthSpent">৳0</div><div class="stat-note">Current month</div></div>
+        <div class="card stat"><div class="stat-label">Transactions</div><div class="stat-value" id="txCount">0</div><div class="stat-note">Saved entries</div></div>
+      </section>
+
+      <section class="card people-card">
+        <h2>Spending by Person</h2>
+        <div class="people-list" id="peopleTotals"></div>
+      </section>
+
+      <section class="card people-card">
+        <h2>Recent Item Requests</h2>
+        <div class="request-list" id="requestList"><div class="empty" style="padding:18px">No item requests yet.</div></div>
+      </section>
+
+      <section class="card history">
+        <h2>Expense History</h2>
+        <div class="toolbar">
+          <input id="search" placeholder="Search reason, notes...">
+          <select id="personFilter"><option value="">All people</option></select>
+          <select id="categoryFilter"><option value="">All categories</option></select>
+          <button class="secondary" id="exportBtn">Export CSV</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Date & Time</th><th>Reason</th><th>Category</th><th>Spent By</th><th>Amount</th><th>Actions</th></tr></thead>
+            <tbody id="expenseRows"></tbody>
+          </table>
+          <div class="empty hidden" id="emptyState">No expenses found.</div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+
+<div class="modal hidden" id="iosInstallModal">
+  <div class="card modal-box">
+    <div class="modal-head"><h2 style="margin:0">Install SpendLog on iPhone</h2><button class="close" id="closeIosInstall">×</button></div>
+    <div style="color:#cbd5e1;line-height:1.65;font-size:14px">
+      <p style="margin-top:0">In Safari, tap the <b>Share</b> button, then choose <b>Add to Home Screen</b>, and tap <b>Add</b>.</p>
+      <p style="margin-bottom:0;color:#8f9db4;font-size:12px">After installation, SpendLog opens in its own app window and can continue working offline.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal hidden" id="requestModal">
+  <div class="card modal-box">
+    <div class="modal-head"><h2 style="margin:0">Request Finished Item</h2><button class="close" id="closeRequestModal">×</button></div>
+    <form id="requestForm">
+      <div class="field"><label>Item name</label><input id="requestItem" placeholder="e.g. Printer paper, coffee, tissue" required></div>
+      <div class="row"><div class="field"><label>Requested By</label><input id="requestedBy" placeholder="Person name" required></div><div class="field"><label>Quantity</label><input id="requestQty" type="number" min="1" value="1" required></div></div>
+      <div class="field"><label>Priority</label><select id="requestPriority"><option>Normal</option><option>Low</option><option>High</option><option>Urgent</option></select></div>
+      <div class="field"><label>Notes (optional)</label><textarea id="requestNotes" placeholder="Brand, size, where it is used, etc."></textarea></div>
+      <button class="primary" type="submit">Submit Request</button>
+    </form>
+  </div>
+</div>
+
+<div class="modal hidden" id="editModal">
+  <div class="card modal-box">
+    <div class="modal-head"><h2 style="margin:0">Edit Expense</h2><button class="close" id="closeModal">×</button></div>
+    <form id="editForm">
+      <input type="hidden" id="editId">
+      <div class="field"><label>Reason</label><input id="editReason" required></div>
+      <div class="row"><div class="field"><label>Amount</label><input id="editAmount" type="number" step="0.01" min="0.01" required></div><div class="field"><label>Spent By</label><input id="editSpentBy" required></div></div>
+      <div class="field"><label>Category</label><select id="editCategory"><option>Food</option><option>Transport</option><option>Shopping</option><option>Bills</option><option>Health</option><option>Education</option><option>Entertainment</option><option>Home</option><option>Work</option><option>Other</option></select></div>
+      <div class="row"><div class="field"><label>Date</label><input id="editDate" type="date" required></div><div class="field"><label>Time</label><input id="editTime" type="time" required></div></div>
+      <div class="field"><label>Notes</label><textarea id="editNotes"></textarea></div>
+      <button class="primary" type="submit">Update Expense</button>
+    </form>
+  </div>
+</div>
+
+<script>
+const EXP_KEY='spendlog_expenses_v2_cache',REQ_KEY='spendlog_requests_v1_cache';
+let expenses=JSON.parse(localStorage.getItem(EXP_KEY)||'[]'), requests=JSON.parse(localStorage.getItem(REQ_KEY)||'[]');
+const $=id=>document.getElementById(id), money=n=>'৳'+Number(n||0).toLocaleString('en-BD',{maximumFractionDigits:2});
+const esc=(s='')=>String(s).replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));
+function toast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2600)}
+function syncState(mode,text){const e=$('syncState');e.className='sync '+mode;e.querySelector('span:last-child').textContent=text}
+function setNow(){const d=new Date();$('date').value=d.toISOString().slice(0,10);$('time').value=d.toTimeString().slice(0,5);$('todayLabel').textContent=d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}
+function cache(){localStorage.setItem(EXP_KEY,JSON.stringify(expenses));localStorage.setItem(REQ_KEY,JSON.stringify(requests));render();}
+async function api(path,options={}){const r=await fetch(path,{headers:{'Content-Type':'application/json',...(options.headers||{})},...options});let data=null;try{data=await r.json()}catch{}if(!r.ok)throw new Error(data?.error||'Database request failed');return data}
+async function loadDatabase(){syncState('','Loading database…');try{const [ex,re]=await Promise.all([api('/api/expenses'),api('/api/requests')]);expenses=Array.isArray(ex)?ex:[];requests=Array.isArray(re)?re:[];cache();syncState('online','Database synced');}catch(err){cache();syncState('error','Offline/local cache mode');}}
+function render(){
+ const now=new Date(),today=now.toISOString().slice(0,10),month=today.slice(0,7);
+ $('totalSpent').textContent=money(expenses.reduce((s,e)=>s+Number(e.amount),0));$('todaySpent').textContent=money(expenses.filter(e=>e.date===today).reduce((s,e)=>s+Number(e.amount),0));$('monthSpent').textContent=money(expenses.filter(e=>String(e.date).startsWith(month)).reduce((s,e)=>s+Number(e.amount),0));$('txCount').textContent=expenses.length;
+ const people=[...new Set(expenses.map(e=>e.spentBy).filter(Boolean))].sort();$('peopleOptions').innerHTML=people.map(p=>`<option value="${esc(p)}">`).join('');const pf=$('personFilter').value;$('personFilter').innerHTML='<option value="">All people</option>'+people.map(p=>`<option ${p===pf?'selected':''}>${esc(p)}</option>`).join('');const cats=[...new Set(expenses.map(e=>e.category).filter(Boolean))].sort(),cf=$('categoryFilter').value;$('categoryFilter').innerHTML='<option value="">All categories</option>'+cats.map(c=>`<option ${c===cf?'selected':''}>${esc(c)}</option>`).join('');
+ const totals={};expenses.forEach(e=>totals[e.spentBy]=(totals[e.spentBy]||0)+Number(e.amount));$('peopleTotals').innerHTML=Object.entries(totals).sort((a,b)=>b[1]-a[1]).map(([p,v])=>`<div class="person-total"><b>${esc(p)}</b><span>${money(v)} total spent</span></div>`).join('')||'<div class="empty" style="padding:18px">No spending data yet.</div>';
+ $('requestList').innerHTML=requests.slice().sort((a,b)=>String(b.created_at||'').localeCompare(String(a.created_at||''))).slice(0,6).map(r=>`<div class="request-item"><div><b>${esc(r.item_name)}</b><div class="request-meta">${esc(r.requested_by)} · Qty ${esc(r.quantity)} · ${esc(r.priority)}${r.notes?'<br>'+esc(r.notes):''}</div></div><span class="badge request-status status-${esc(String(r.status||'Pending').toLowerCase())}">${esc(r.status||'Pending')}</span></div>`).join('')||'<div class="empty" style="padding:18px">No item requests yet.</div>';
+ filterRows();
+}
+function filterRows(){const q=$('search').value.toLowerCase(),pf=$('personFilter').value,cf=$('categoryFilter').value;const list=expenses.filter(e=>(!q||`${e.reason} ${e.notes||''} ${e.spentBy}`.toLowerCase().includes(q))&&(!pf||e.spentBy===pf)&&(!cf||e.category===cf)).sort((a,b)=>`${b.date}T${b.time}`.localeCompare(`${a.date}T${a.time}`));$('expenseRows').innerHTML=list.map(e=>`<tr><td>${esc(e.date)}<br><span style="color:#76849a;font-size:11px">${esc(e.time)}</span></td><td><b>${esc(e.reason)}</b>${e.notes?`<br><span style="color:#7f8da3;font-size:11px">${esc(e.notes)}</span>`:''}</td><td><span class="badge">${esc(e.category)}</span></td><td><span class="person">${esc(e.spentBy)}</span></td><td class="amount">${money(e.amount)}</td><td><div class="actions"><button class="icon-btn" onclick="editExpense('${e.id}')">Edit</button><button class="icon-btn delete" onclick="deleteExpense('${e.id}')">Delete</button></div></td></tr>`).join('');$('emptyState').classList.toggle('hidden',list.length>0)}
+$('expenseForm').addEventListener('submit',async e=>{e.preventDefault();const item={reason:$('reason').value.trim(),amount:Number($('amount').value),spentBy:$('spentBy').value.trim(),category:$('category').value,date:$('date').value,time:$('time').value,notes:$('notes').value.trim()};try{const saved=await api('/api/expenses',{method:'POST',body:JSON.stringify(item)});expenses.push(saved);cache();syncState('online','Database synced');e.target.reset();setNow();$('reason').focus();toast('Expense saved to database');}catch(err){toast('Could not save to database: '+err.message);syncState('error','Database save failed');}});
+['search','personFilter','categoryFilter'].forEach(id=>$(id).addEventListener(id==='search'?'input':'change',filterRows));
+window.deleteExpense=async id=>{if(!confirm('Delete this expense?'))return;try{await api('/api/expenses?id='+encodeURIComponent(id),{method:'DELETE'});expenses=expenses.filter(e=>e.id!==id);cache();toast('Expense deleted');}catch(err){toast(err.message)}};
+window.editExpense=id=>{const e=expenses.find(x=>x.id===id);if(!e)return;$('editId').value=e.id;$('editReason').value=e.reason;$('editAmount').value=e.amount;$('editSpentBy').value=e.spentBy;$('editCategory').value=e.category;$('editDate').value=e.date;$('editTime').value=e.time;$('editNotes').value=e.notes||'';$('editModal').classList.remove('hidden')};
+$('closeModal').onclick=()=>$('editModal').classList.add('hidden');$('editModal').addEventListener('click',e=>{if(e.target===$('editModal'))$('editModal').classList.add('hidden')});
+$('editForm').addEventListener('submit',async e=>{e.preventDefault();const id=$('editId').value,item={reason:$('editReason').value.trim(),amount:Number($('editAmount').value),spentBy:$('editSpentBy').value.trim(),category:$('editCategory').value,date:$('editDate').value,time:$('editTime').value,notes:$('editNotes').value.trim()};try{const saved=await api('/api/expenses?id='+encodeURIComponent(id),{method:'PATCH',body:JSON.stringify(item)});expenses=expenses.map(x=>x.id===id?saved:x);cache();$('editModal').classList.add('hidden');toast('Expense updated in database');}catch(err){toast(err.message)}});
+$('requestItemBtn').onclick=()=>{$('requestedBy').value=$('spentBy').value||'';$('requestModal').classList.remove('hidden')};$('closeRequestModal').onclick=()=>$('requestModal').classList.add('hidden');$('requestModal').addEventListener('click',e=>{if(e.target===$('requestModal'))$('requestModal').classList.add('hidden')});
+$('requestForm').addEventListener('submit',async e=>{e.preventDefault();const item={item_name:$('requestItem').value.trim(),requested_by:$('requestedBy').value.trim(),quantity:Number($('requestQty').value),priority:$('requestPriority').value,notes:$('requestNotes').value.trim()};try{const saved=await api('/api/requests',{method:'POST',body:JSON.stringify(item)});requests.unshift(saved);cache();e.target.reset();$('requestQty').value=1;$('requestModal').classList.add('hidden');toast('Item request saved to database');}catch(err){toast(err.message)}});
+let deferredInstallPrompt=null;const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent),isStandalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;if(!isStandalone)$('installBtn').classList.remove('hidden')});if(isIOS&&!isStandalone)$('installBtn').classList.remove('hidden');$('installBtn').addEventListener('click',async()=>{if(isIOS){$('iosInstallModal').classList.remove('hidden');return}if(deferredInstallPrompt){deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;$('installBtn').classList.add('hidden')}});$('closeIosInstall').onclick=()=>$('iosInstallModal').classList.add('hidden');$('iosInstallModal').addEventListener('click',e=>{if(e.target===$('iosInstallModal'))$('iosInstallModal').classList.add('hidden')});window.addEventListener('appinstalled',()=>$('installBtn').classList.add('hidden'));if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
+$('exportBtn').onclick=()=>{const rows=[['Date','Time','Reason','Category','Spent By','Amount','Notes'],...expenses.map(e=>[e.date,e.time,e.reason,e.category,e.spentBy,e.amount,e.notes||''])],csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n'),blob=new Blob([csv],{type:'text/csv'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='spendlog-expenses.csv';a.click();URL.revokeObjectURL(url)};
+setNow();render();loadDatabase();
+</script>
+</body>
+</html>

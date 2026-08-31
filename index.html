@@ -89,7 +89,7 @@
         <div class="field"><label>Notes (optional)</label><textarea id="notes" placeholder="Extra details, shop name, payment method, etc."></textarea></div>
         <button class="primary" type="submit">Save Expense</button>
       </form>
-      <div class="quick-actions"><button class="request-btn" id="requestItemBtn" type="button">Request Finished Item</button><a class="admin-link" href="admin.html">Admin Panel</a></div>
+      <div class="quick-actions"><button class="request-btn" id="requestItemBtn" type="button">Request Item</button><a class="admin-link" href="admin.html">Admin Panel</a></div>
       <div class="sync" id="syncState"><span class="sync-dot"></span><span>Connecting to database…</span></div>
       <div class="footer-note">Database-backed on Vercel, with a local cache for offline safety.</div>
     </aside>
@@ -145,7 +145,7 @@
 
 <div class="modal hidden" id="requestModal">
   <div class="card modal-box">
-    <div class="modal-head"><h2 style="margin:0">Request Finished Item</h2><button class="close" id="closeRequestModal">×</button></div>
+    <div class="modal-head"><h2 style="margin:0">Request Item</h2><button class="close" id="closeRequestModal">×</button></div>
     <form id="requestForm">
       <div class="field"><label>Item name</label><input id="requestItem" placeholder="e.g. Printer paper, coffee, tissue" required></div>
       <div class="row"><div class="field"><label>Requested By</label><input id="requestedBy" placeholder="Person name" required></div><div class="field"><label>Quantity</label><input id="requestQty" type="number" min="1" value="1" required></div></div>

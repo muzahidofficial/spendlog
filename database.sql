@@ -28,3 +28,10 @@ create table if not exists public.item_requests (
 alter table public.expenses enable row level security;
 alter table public.item_requests enable row level security;
 -- No browser policies are created intentionally. The app talks to Supabase only through Vercel serverless functions using the service-role key.
+
+-- Purchase completion fields for requested items. Safe to run on an existing SpendLog database.
+alter table public.item_requests add column if not exists purchase_price numeric(12,2);
+alter table public.item_requests add column if not exists bought_by text;
+alter table public.item_requests add column if not exists purchase_date date;
+alter table public.item_requests add column if not exists purchase_time time;
+alter table public.item_requests add column if not exists expense_id uuid references public.expenses(id) on delete set null;
